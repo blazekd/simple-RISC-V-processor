@@ -1,0 +1,11 @@
+*.out
+*.vcd
+*.jar
+
+
+
+
+
+.idea/
+.bak
+.code/
