@@ -29,8 +29,6 @@ sw t4, (t6) # save outImg height
 addi t2, t2, 8 # move to addres of img2 height (so we can start merging pixels)
 
 # t4 = height, t3 = width, t0 = pixel count
-#add t0, t4, zero # uložení výšky k pøièítání 
-#addi t3, t3, -1	# b - 1 - jednou už tam je
 
 add t0, zero, zero # counting of pixels - init to zero
 
@@ -42,7 +40,7 @@ merge_mult: # width times add height (count pixels == i in for cycle)
 	beq zero, zero, merge_mult # always jump to merge_mult
 	
 merge_cont:
-add a0, t0, zero # set out parameter (pixel count)
+add a0, t0, zero # set out register (a0) to pixel count
 add t4, t0, zero # set i variable in for cycle to pixel count
 
 merge_for: # for cycle
@@ -57,34 +55,34 @@ merge_for: # for cycle
 	
 	adduqb t5, t0, t5 # add channels together (using custom adduqb instruction)
 	
-	addi t0, zero, 8 # posun
+	addi t0, zero, 8 # variable for shifts - 2 bytes (8 bits)
 	
-	sll t5, t5, t0 
-	srl t5, t5, t0 # spolu s pøedchozím øádkem vynuluje první 2 byte
+	sll t5, t5, t0 # shift logical left and then right by 2 bytes
+	srl t5, t5, t0 # both shifts combined will make the 2 most significant bytes 0
 	
-	addi t0, zero, 255
-	addi t3, zero, 24 # posun pro alphu
-	sll t0, t0, t3
-	add t5, t5, t0 # nastaví alpha na 0x255
+	addi t0, zero, 255 # prepare 0xff value for alpha channel
+	addi t3, zero, 24 # varibale for shift for alpha channel 6 bytes (24 bits)
+	sll t0, t0, t3 # logical shift left to make alpha channel (0xff000000)
+	add t5, t5, t0 # set alpha channel on pixel to 0xff
 	
-	sw t5, (t6) # uloží pixel do outu
+	sw t5, (t6) # save pixel to outImag
 	
 
-	addi t4, t4, -1 # i++
-	beq zero,zero, merge_for
+	addi t4, t4, -1 # i--
+	beq zero,zero, merge_for # always jump to merge_for
 
 merge_done:          
 ret                   # return from the routine
 #------------------------------------------------------------
 main:
 
-lw a0, 4 # load adresy img1
-lw a1, 8 # load adresy img2
-lw a2, 12 # load adresy out img
+lw a0, 4 # load img1 address to in parameter (register a0) from address 0x00000004
+lw a1, 8 # load img2 address to second in parameter (register a1) from address 0x00000008
+lw a2, 12 # load outImg address to third in parameter (register a2) from address 0x0000000c
 
 
-jal merge
+jal merge # start routine merge
 
-sw a0, 16 # uložení šíøky*výšky
+sw a0, 16 # save pixel count to address 0x00000010
 
 
