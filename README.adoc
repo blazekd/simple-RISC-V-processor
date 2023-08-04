@@ -4,7 +4,7 @@
 
 This is semestral work for https://bilakniha.cvut.cz/en/predmet6701806.html[Architecture of Computer Systems course] at https://fit.cvut.cz/en[FIT CTU]. `test.v` file and module declaration for processor and gpr_set in `CPU.v` file was provided.
 
-The goal of this work was to desing and describe a processor using Verilog HDL that could run a subset of RISC-V instruction and one custom instruction. <<supported,List of supported instruction>>, <<howitworks, How does it work>>
+The goal of this work was to design and describe a processor using Verilog HDL that could run a subset of RISC-V instruction and one custom instruction. <<supported,List of supported instruction>>, <<howitworks, How does it work>>
 
 The other goal was to write simple program in assembly for this processor. This program can be run on the processor (<<runningprograms,Running programs on this CPU>>).
 There are also some other test programs in assembly. <<customprograms,List of programs>>
